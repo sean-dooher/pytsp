@@ -84,6 +84,7 @@ TOUR_FILE =  {}
 
 def run(tsp_path, start=None, solver="concorde"):
     bdir = os.path.dirname(tsp_path)
+    old_dir = os.getcwd()
     os.chdir(bdir)
 
     if solver.lower() == 'concorde':
@@ -103,7 +104,9 @@ def run(tsp_path, start=None, solver="concorde"):
 
         raw = [int(x) for x in sol.split()[1:]]  # first is just n cities
 
-        metadata = output.strip().split("\n")
+        solution = ''
+
+        metadata = output.decode().strip().split("\n")
         for line in metadata:
             if line.startswith("Optimal Solution:"):
                 solution = float(line.split(":")[1])
@@ -145,7 +148,7 @@ def run(tsp_path, start=None, solver="concorde"):
         # rotate to the beginning of the route
         while raw[0] != start:
             raw = raw[1:] + raw[:1]
-
+    os.chdir(old_dir)
     return {'tour': raw,
             'solution': solution,
             'metadata': metadata}
