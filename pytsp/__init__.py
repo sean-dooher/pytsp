@@ -95,6 +95,7 @@ def run(tsp_path, start=None, solver="concorde"):
             if "No such file or directory" in str(exc):
                 raise TSPSolverNotFound(
                     "{0} is not found on your path or is not executable".format(CONCORDE))
+            output = 'fasf'
 
         solf = os.path.join(
             bdir, os.path.splitext(os.path.basename(tsp_path))[0] + ".sol")
@@ -105,11 +106,6 @@ def run(tsp_path, start=None, solver="concorde"):
         raw = [int(x) for x in sol.split()[1:]]  # first is just n cities
 
         solution = ''
-
-        metadata = output.decode().strip().split("\n")
-        for line in metadata:
-            if line.startswith("Optimal Solution:"):
-                solution = float(line.split(":")[1])
 
     elif solver.lower() == 'lkh':
         LKH = os.environ.get('LKH', 'LKH')
@@ -149,6 +145,4 @@ def run(tsp_path, start=None, solver="concorde"):
         while raw[0] != start:
             raw = raw[1:] + raw[:1]
     os.chdir(old_dir)
-    return {'tour': raw,
-            'solution': solution,
-            'metadata': metadata}
+    return {'tour': raw}
